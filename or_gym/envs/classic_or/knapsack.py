@@ -402,7 +402,7 @@ class BoundedKnapsackEnv(KnapsackEnv):
         self._update_state()
         return self.state
     
-    def render(self):
+    def render(self, mode=None):
         total_value = 0
         total_weight = 0
         for i in self._collected_items :
