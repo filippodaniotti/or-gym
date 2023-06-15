@@ -342,6 +342,7 @@ class BoundedKnapsackEnv(KnapsackEnv):
             if self.item_weights[item] + self.current_weight <= self.max_weight:
                 self.current_weight += self.item_weights[item]
                 reward = self.item_values[item]
+                self._collected_items.append(item)
                 if self.current_weight == self.max_weight:
                     done = True
                 else:
@@ -397,8 +398,20 @@ class BoundedKnapsackEnv(KnapsackEnv):
             self.item_limits = self.item_limits_init.copy()
 
         self.current_weight = 0
+        self._collected_items.clear()
         self._update_state()
         return self.state
+    
+    def render(self):
+        total_value = 0
+        total_weight = 0
+        for i in self._collected_items :
+            total_value += self.item_values[i]
+            total_weight += self.item_weights[i]
+        print(self._collected_items, total_value, total_weight)
+        
+        # RlLib requirement: Make sure you either return a uint8/w x h x 3 (RGB) image or handle rendering in a window and then return `True`.
+        return True
 
 class OnlineKnapsackEnv(BoundedKnapsackEnv):
     '''
